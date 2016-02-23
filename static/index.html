@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Duplicate Finder</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="/css/" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.red-orange.min.css" />
+  <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+</head>
+<body ng-app="main">
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer" ng-controller="mainController">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">{{local}}</span>
+        <div class="mdl-layout-spacer"></div>
+        <span class="mdl-layout-title nav-only"><i class="fa fa-bomb"></i></span>
+      </div>
+    </header>
+    <div class="mdl-layout__drawer" ng-init="load()">
+      <span class="mdl-layout-title custom-title">Duplicate Finder <i class="fa fa-bomb"></i></span>
+      <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" ng-click="setLocation('Conflicts')">Conflicts</a>
+        <a class="mdl-navigation__link" ng-click="setLocation('All Hashes')">All Hashes</a>
+        <div class="bottom">
+          <div class="center-full">
+            <a class="mdl-button mdl-js-button mdl-button--icon" href="https://github.com/JacobTheEvans/duplicate-finder-bot"><i class="fa fa-github"></i></a>
+            <a class="mdl-button mdl-js-button mdl-button--icon" href="http://jacobtheevans.com/"><i class="fa fa-user"></i></a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <main class="mdl-layout__content">
+      <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width">
+        <thead>
+          <tr>
+            <th class="mdl-data-table__cell--non-numeric">File Path</th>
+            <th>Hash</th>
+          </tr>
+        </thead>
+        <tbody ng-if="local == 'All Hashes'">
+          <tr ng-repeat="item in data track by $index">
+            <td class="mdl-data-table__cell--non-numeric">{{item['file']}}</td>
+            <td>{{item['hash']}}</td>
+          </tr>
+        </tbody>
+        <tbody ng-if="local == 'Conflicts'">
+          <tr ng-repeat="item in conflictData track by $index">
+            <td class="mdl-data-table__cell--non-numeric">{{item['file']}}</td>
+            <td>{{item['hash']}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script>
+  $(document).mousedown(function (e) {
+    var container = $(".mdl-layout__drawer");
+    var button = $(".mdl-layout__drawer-button");
+    if(!container.is(e.target) && !button.is(e.target) && container.has(e.target).length === 0) {
+      container.removeClass("is-visible");
+    }
+  });
+  </script>
+  <script src="https://code.angularjs.org/1.4.8/angular.min.js"></script>
+  <script src="/js/"></script>
+</body>
+</html>

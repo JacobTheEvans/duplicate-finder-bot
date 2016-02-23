@@ -4,6 +4,8 @@ import json
 import hashlib
 from selenium import webdriver
 from flask import Flask
+import thread
+import time
 
 BUF_SIZE = 65536
 app = Flask('__app__', static_url_path='')
@@ -39,6 +41,7 @@ def save(data):
         f.write(data)
 
 def open_browser():
+    time.sleep(3)
     driver = webdriver.Firefox()
     driver.get("http://localhost:8000/")
 
@@ -93,7 +96,7 @@ def main():
             SHA1 = hashlib.sha1()
 
     save(json.dumps(files_dict))
-    open_browser()
+    thread.start_new_thread(open_browser,())
     app.run(host = '127.0.0.1', port = 8000)
 
 if __name__ == "__main__":

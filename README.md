@@ -1,5 +1,5 @@
 #Duplicate Finder Bot
-A python bot with a web interface that shows files that are copies each other in given directories.
+A python bot with a web interface that shows files that are copies of each other in given directories.
 <br>
 <br>
 Dependencies:

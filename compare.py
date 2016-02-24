@@ -22,12 +22,8 @@ def css_send():
 def js_send():
     return app.send_static_file('main.js')
 
-@app.route('/alldata/')
+@app.route('/data/')
 def json_send_all():
-    return app.send_static_file('all.json')
-
-@app.route("/conflictsdata")
-def json_send_conflicts():
     return app.send_static_file('conflicts.json')
 
 def hash_file(hash_obj, file_name):
@@ -41,8 +37,6 @@ def hash_file(hash_obj, file_name):
     return "SHA1: %s" % (value)
 
 def save(data):
-    with open("./static/all.json", "w") as f:
-        f.write(json.dumps(data))
     conflicts = []
     for i in range(0, len(data)):
         isDuplicate = False
@@ -51,6 +45,7 @@ def save(data):
                 isDuplicate = True
                 break
         if isDuplicate:
+            isDuplicate = False
             conflicts.append(data[i])
     with open("./static/conflicts.json", "w") as f:
         f.write(json.dumps(conflicts))

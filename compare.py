@@ -22,9 +22,13 @@ def css_send():
 def js_send():
     return app.send_static_file('main.js')
 
-@app.route('/data/')
-def json_send():
-    return app.send_static_file('data.json')
+@app.route('/alldata/')
+def json_send_all():
+    return app.send_static_file('all.json')
+
+@app.route("/conflictsdata")
+def json_send_conflicts():
+    return app.send_static_file('conflicts.json')
 
 def hash_file(hash_obj, file_name):
     with open(file_name, "rb") as f:
@@ -37,8 +41,19 @@ def hash_file(hash_obj, file_name):
     return "SHA1: %s" % (value)
 
 def save(data):
-    with open("./static/data.json", "w") as f:
-        f.write(data)
+    with open("./static/all.json", "w") as f:
+        f.write(json.dumps(data))
+    conflicts = []
+    for i in range(0, len(data)):
+        isDuplicate = False
+        for x in range(0, len(data)):
+            if data[x]["hash"] == data[i]["hash"] and x != i:
+                isDuplicate = True
+                break
+        if isDuplicate:
+            conflicts.append(data[i])
+    with open("./static/conflicts.json", "w") as f:
+        f.write(json.dumps(conflicts))
 
 def open_browser():
     time.sleep(3)
@@ -95,9 +110,9 @@ def main():
             files_dict.append({"file": file, "hash": hash_file(SHA1, file)})
             SHA1 = hashlib.sha1()
 
-    save(json.dumps(files_dict))
-    thread.start_new_thread(open_browser,())
-    app.run(host = '127.0.0.1', port = 8000)
+    save(files_dict)
+    thread.start_new_thread(open_browser, ())
+    app.run(host='127.0.0.1', port=8000)
 
 if __name__ == "__main__":
     main()

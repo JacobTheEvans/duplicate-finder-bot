@@ -1,8 +1,11 @@
 var app = angular.module("main",[]);
 
 app.service("loadData", ["$http", function($http) {
-  this.load = function(isSuc,isFail) {
-    $http.get("/data/").then(isSuc,isFail);
+  this.loadAll = function(isSuc,isFail) {
+    $http.get("/alldata/").then(isSuc,isFail);
+  };
+  this.loadConflicts = function(isSuc,isFail) {
+    $http.get("/conflictsdata").then(isSuc,isFail);
   };
 }]);
 
@@ -17,27 +20,14 @@ app.controller("mainController", ["$scope", "loadData", function($scope,loadData
     componentHandler.upgradeAllRegistered();
   };
   $scope.load = function() {
-    loadData.load($scope.setData,$scope.logError);
+    loadData.loadAll($scope.setAllData,$scope.logError);
+    loadData.loadConflicts($scope.setConflictData,$scope.logError);
   };
-  $scope.setData = function(response) {
+  $scope.setAllData = function(response) {
     $scope.data = response.data;
-    $scope.setConflictData(response.data);
   };
-  $scope.setConflictData = function(data) {
-    var result = [];
-    for(var i = 0; i < data.length; i++) {
-      var isDuplicate = false
-      for(var x = 0; x < data.length; x++) {
-        if(data[x]["hash"] == data[i]["hash"] && x != i) {
-          isDuplicate = true;
-          break;
-        }
-      }
-      if(isDuplicate) {
-        result.push(data[i]);
-      }
-    }
-    $scope.conflictData = result;
+  $scope.setConflictData = function(response) {
+    $scope.conflictData = response.data;
   };
   $scope.logError = function(response) {
     console.log(response.status);
